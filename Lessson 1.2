@@ -5,12 +5,9 @@ import pytest
     *pytest.fixture(name="test_data"),
 ])
 def test_create_and_check_post(rest_client, title, description, content):
-    # Create a new post
     created_post = rest_client.create_post(title, description, content)
 
-    # Check if the post is created successfully
     assert created_post.get('id') is not None, "Post creation failed"
 
-    # Get the list of posts and check if the created post is present based on the description
     posts = rest_client.get_posts()
     assert any(post['description'] == description for post in posts), f"Created post not found in the list"
