@@ -1,10 +1,17 @@
-@pytest.mark.parametrize("title, description, content", [
-    ('New Post', 'This is a new post description', 'Post content here'),
-])
-def test_create_and_check_post(rest_client, title, description, content):
-    created_post = rest_client.create_post(title, description, content)
+import pytest
+from rest_library import MyAPIClient
 
-    assert created_post.get('id') is not None, "Post creation failed"
+@pytest.fixture(scope='session')
+def base_url():
+    return 'https://test-stand.gb.ru'
 
-    posts = rest_client.get_posts()
-    assert any(post['description'] == description for post in posts), f"Created post not found in the list"
+@pytest.fixture
+def rest_client(base_url):
+    return MyAPIClient(base_url)
+
+@pytest.fixture
+def test_data():
+    return [
+        ('New Post 1', 'Description for post 1', 'Content for post 1'),
+        ('New Post 2', 'Description for post 2', 'Content for post 2'),
+    ]
