@@ -1,0 +1,10 @@
+@pytest.mark.parametrize("title, description, content", [
+    ('New Post', 'This is a new post description', 'Post content here'),
+])
+def test_create_and_check_post(rest_client, title, description, content):
+    created_post = rest_client.create_post(title, description, content)
+
+    assert created_post.get('id') is not None, "Post creation failed"
+
+    posts = rest_client.get_posts()
+    assert any(post['description'] == description for post in posts), f"Created post not found in the list"
